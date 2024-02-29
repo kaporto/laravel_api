@@ -2,11 +2,20 @@
 
 namespace App\Http\Controllers\Api\V2;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreTaskRequest;
-use App\Http\Requests\UpdateTaskRequest;
-use App\Http\Resources\TaskResource;
 use App\Models\Task;
+
+use Illuminate\Http\Response;
+
+use App\Http\Controllers\Controller;
+
+use App\Http\Resources\TaskResource;
+
+use Illuminate\Http\RedirectResponse;
+
+use App\Http\Requests\StoreTaskRequest;
+
+use App\Http\Requests\UpdateTaskRequest;
+
 
 class TaskController extends Controller
 {
@@ -23,7 +32,7 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request)
     {
-        $task = $request->user()->tasks->create($request->validated());
+        $task = $request->user()->tasks()->create($request->validated());
         return TaskResource::make($task);
     }
 
@@ -32,6 +41,7 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
+        $this->authorize('view', $task);
         return TaskResource::make($task);
     }
 
