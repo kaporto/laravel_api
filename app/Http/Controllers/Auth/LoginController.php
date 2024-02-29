@@ -15,8 +15,15 @@ class LoginController extends Controller
      */
     public function __invoke(LoginRequest $request)
     {
-        $user = User::where('email', $request->email)->first();
+        /*$user = User::where('email', $request->email)->first();
         if(!$user || !Hash::check($request->password, $user->password)){
+            throw ValidationException::withMessages([
+                'email' => 'As crendenciais informadas estão incorretas.'
+            ]);
+        }*/
+
+        
+        if(!auth()->attempt($request->only(['email','password']))){
             throw ValidationException::withMessages([
                 'email' => 'As crendenciais informadas estão incorretas.'
             ]);
